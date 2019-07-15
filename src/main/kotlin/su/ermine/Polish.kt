@@ -10,12 +10,8 @@ fun main() {
     val function1 = "(22 + 31 - 3) * (45 - 23 / (2 - 1))" // = 1100
     calc(function1.replace(" ", ""))
 
-    println("************************")
-
     val function2 = "(22 + 31 * 3) * (45 - 24 / (2 - 1) * 2) - 5" // = -350
     calc(function2.replace(" ", ""))
-
-    println("************************")
 
     val function3 = "(6 + 10 - 4) / ( 1 + 1 * 2) + 1" // =5
     calc(function3.replace(" ", ""))
@@ -35,13 +31,22 @@ fun operation(operator : Char, operand1 : Int, operand2 : Int) : String {
     }
 }
 
+fun action(c : Char) {
+    if (!operators.empty() && check(operators.peek(), c)) {
+        val op2 = operands.pop().toInt()
+        val op1 = operands.pop().toInt()
+        val op = operators.pop()
+        operands.push(operation(op, op1, op2))
+    }
+    operands.push("")
+    operators.push(c)
+}
+
 fun calc(function : String) {
 
     for (c in function.toCharArray()) {
         when (c) {
-            '(' -> {
-                operators.push(c)
-            }
+            '(' -> operators.push(c)
             ')' -> {
                 while (!operators.empty()) {
                     val op = operators.pop()
@@ -53,47 +58,7 @@ fun calc(function : String) {
                     operands.push(operation(op, op1, op2))
                 }
             }
-            '+' -> {
-                if (!operators.empty() && check(operators.peek(), c)) {
-                    val op2 = operands.pop().toInt()
-                    val op1 = operands.pop().toInt()
-                    val op = operators.pop()
-                    operands.push(operation(op, op1, op2))
-                }
-                operands.push("")
-                operators.push(c)
-            }
-            '-' -> {
-                if (!operators.empty() && check(operators.peek(), c)) {
-                    val op2 = operands.pop().toInt()
-                    val op1 = operands.pop().toInt()
-                    val op = operators.pop()
-                    operands.push(operation(op, op1, op2))
-                }
-                operands.push("")
-                operators.push(c)
-            }
-            '/' -> {
-                if (!operators.empty() && check(operators.peek(), c)) {
-                    val op2 = operands.pop().toInt()
-                    val op1 = operands.pop().toInt()
-                    val op = operators.pop()
-                    operands.push(operation(op, op1, op2))
-
-                }
-                operands.push("")
-                operators.push(c)
-            }
-            '*' -> {
-                if (!operators.empty() && check(operators.peek(), c)) {
-                    val op2 = operands.pop().toInt()
-                    val op1 = operands.pop().toInt()
-                    val op = operators.pop()
-                    operands.push(operation(op, op1, op2))
-                }
-                operands.push("")
-                operators.push(c)
-            }
+            '+', '-', '/', '*' -> action(c)
             else -> {
                 operands.push(
                     if (!operands.empty()) { operands.pop() } else { "" } + c.toString()
@@ -109,13 +74,7 @@ fun calc(function : String) {
         operands.push(operation(op, op1, op2))
     }
 
-    println("*************Operators*******************")
-
-    while (!operators.isEmpty()) {
-        println(operators.pop())
-    }
-
-    println("*************Operands*******************")
+    println("*************$function *******************")
 
     while (!operands.isEmpty()) {
         println(operands.pop())
