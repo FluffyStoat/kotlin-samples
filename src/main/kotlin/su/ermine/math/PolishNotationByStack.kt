@@ -13,9 +13,6 @@ class PolishNotationByStack {
                 val app  = PolishNotationByStack()
                 app.calc(arg)
             }
-
-            val app  = PolishNotationByStack()
-            app.calc("7 - 2 * 4 + 3")
         }
     }
 
